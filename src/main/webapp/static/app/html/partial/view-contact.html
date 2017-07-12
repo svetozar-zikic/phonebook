@@ -1,0 +1,16 @@
+<div ng-controller = 'viewContactCtrl'>
+	<form name="viewContactForm" novalidate class="form-horizontal">
+		<div class="form-group">
+			<label for="position" class="col-sm-2 control-label">Position</label>
+			<div class="col-sm-10">
+			<input type="text" class="form-control" ng-model="contact.position" id='position' ng-disabled="true" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="phone" class="col-sm-2 control-label">Phone</label>
+			<div class="col-sm-10">
+			<input type="text" class="form-control" ng-model="contact.phone" id='phone' ng-disabled="true" />
+			</div>
+		</div>
+	</form>
+</div>

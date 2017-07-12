@@ -1,18 +1,25 @@
-phonebook application
+PhoneBook WebApp
+
 =============================================
 
-authentication levels:
-user - view only
-manager - edit position name and/or phone #
-admin - full rights
+Basic info:
 
-basics:
-spa
-spring
-jpa
-hibernate
-bootstrap
+Eclipse IDE
 
-home page:
-logo and list of all numbers (w/ appropriate function, auth level dependant)
-search button somewhere
+Maven project
+
+SPA
+
+Spring
+
+Hibernate
+
+Bootstrap
+
+AngularJS
+
+=============================================
+
+Link to application:
+
+http://www.svetozarzikic.com:9010
