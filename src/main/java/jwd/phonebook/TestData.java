@@ -14,7 +14,7 @@ public class TestData {
 	@Autowired
 	ContactService contactSvc;
 	
-	@PostConstruct
+//	@PostConstruct
 	public void init(){
 		
 		Contact c1 = new Contact();

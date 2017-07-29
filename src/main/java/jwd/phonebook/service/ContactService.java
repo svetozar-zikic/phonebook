@@ -18,6 +18,8 @@ public interface ContactService {
 	
 	Contact delete(Long id);
 	
+	List<Contact> findByPositionOrPhone(Contact contact);
+	
 	
 
 }

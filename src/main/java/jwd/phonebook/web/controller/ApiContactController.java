@@ -1,5 +1,6 @@
 package jwd.phonebook.web.controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import jwd.phonebook.model.Contact;
 import jwd.phonebook.service.ContactService;
 import jwd.phonebook.support.ContactDTOToContact;
@@ -65,9 +67,19 @@ public class ApiContactController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<ContactDTO> add(@RequestBody ContactDTO dto){
+	public ResponseEntity<ContactDTO> add(
+			@RequestBody ContactDTO dto,
+			@RequestParam(value = "page", defaultValue = "0") int page
+			){
 		
 		Contact contact = toContact.convert(dto);
+		List<Contact> existing = contactSvc.findByPositionOrPhone(contact);
+		
+		if (!existing.isEmpty() || existing.size() > 0) {
+			System.out.println("phone or position already exists!!");
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
 		contactSvc.save(contact);
 		
 		return new ResponseEntity<>(toDTO.convert(contact), HttpStatus.CREATED);

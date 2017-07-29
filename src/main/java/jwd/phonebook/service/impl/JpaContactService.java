@@ -1,5 +1,7 @@
 package jwd.phonebook.service.impl;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,15 @@ public class JpaContactService implements ContactService {
 		Contact deleted = contactRepo.findOne(id);
 		contactRepo.delete(id);
 		return deleted;
+	}
+
+	@Override
+	public List<Contact> findByPositionOrPhone(Contact contact) {
+		/*String position = contact.getPosition();
+		if (position != null){
+			position = "%" + position + "%";
+		}*/
+		return contactRepo.findByPositionOrPhone(contact.getPosition(), contact.getPhone());
 	}
 
 
