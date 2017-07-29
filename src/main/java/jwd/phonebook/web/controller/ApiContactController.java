@@ -81,8 +81,11 @@ public class ApiContactController {
 		}
 		
 		contactSvc.save(contact);
+		Page<Contact> pages = contactSvc.findAll(0);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("pages", pages.getTotalPages()+"");
 		
-		return new ResponseEntity<>(toDTO.convert(contact), HttpStatus.CREATED);
+		return new ResponseEntity<>(toDTO.convert(contact), headers, HttpStatus.CREATED);
 		
 	}
 	

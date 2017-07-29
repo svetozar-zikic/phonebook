@@ -22,7 +22,21 @@ phonebookApp.service('pagingSvc', function($location){
 	};
 });
 
-phonebookApp.controller('contactsCtrl', function($scope, $http, $location, $routeParams, pagingSvc){
+phonebookApp.service('editPageSvc', function() {
+	
+	storedPage = {};
+	
+	this.storePage = function(page){
+		storedPage = page;
+	}
+	
+	this.retrievePage = function(){
+		return storedPage;
+	}
+	
+});
+
+phonebookApp.controller('contactsCtrl', function($scope, $http, $location, $routeParams, pagingSvc, editPageSvc){
 	
 	$scope.base_url = "/api/contacts";
 	$scope.contacts = [];
@@ -46,7 +60,8 @@ phonebookApp.controller('contactsCtrl', function($scope, $http, $location, $rout
 		$location.path("/contacts/add");
 	};
 	
-	$scope.editContact = function(id) {
+	$scope.editContact = function(id, page) {
+		editPageSvc.storePage(page);
 		$location.path("/contacts/edit/" + id);
 	};
 	
@@ -95,11 +110,14 @@ phonebookApp.controller('addContactCtrl', function($scope, $http, $location){
 	
 	$scope.contact = {};
 	$scope.base_url = "/api/contacts";
+	$scope.web_address = "/contacts/page/";
+	$scope.totalPages = 0;
 	
 	$scope.add = function(){
 		$http.post($scope.base_url, $scope.contact)
 		.then(function success(data){
-			$location.path("/contacts");
+			$scope.totalPages = data.headers("pages");
+			$location.path($scope.web_address + ($scope.totalPages - 1));
 		}, function error(data){
 			console.log(data);
 		});
@@ -132,16 +150,20 @@ phonebookApp.controller('viewContactCtrl', function($scope, $http, $routeParams)
 
 //==========================================================================================
 
-phonebookApp.controller('editContactCtrl', function($scope, $http, $location, $routeParams){
+phonebookApp.controller('editContactCtrl', function($scope, $http, $location, $routeParams, editPageSvc){
 	
 	$scope.contact = {};
 	$scope.base_url = "/api/contacts/";
+	$scope.page = editPageSvc.retrievePage();
+	
+	if (isNaN($scope.page)) {
+		$scope.page = 0;
+	}
 	
 	var getContact = function(id){
 		$http.get($scope.base_url + "/" + $routeParams.id)
 		.then(function success(data){
 			$scope.contact = data.data;
-			console.log(data);
 		}, function error(data){
 			console.log(data);
 		});
@@ -153,7 +175,7 @@ phonebookApp.controller('editContactCtrl', function($scope, $http, $location, $r
 	$scope.edit = function(){
 		$http.put($scope.base_url + $routeParams.id, $scope.contact)
 			.then(function success(data){
-				$location.path("/contacts");
+				$location.path("/contacts/page/" + $scope.page);
 			}, function error(data){
 				console.log(data);
 			})
