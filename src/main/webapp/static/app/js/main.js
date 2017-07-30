@@ -186,44 +186,164 @@ phonebookApp.controller('editContactCtrl', function($scope, $http, $location, $r
 
 //==========================================================================================
 
-phonebookApp.controller('findContactCtrl', function($scope, $http, $routeParams, $location){
+phonebookApp.controller('findContactByPositionCtrl', function($scope, $http, $routeParams, $location){
 	
 	$scope.contactSearch = {};
 	$scope.contacts = [];
-	$scope.indikator = true;
+	$scope.indicator = true;
 	
+	$scope.page = 0;
+	$scope.num_pages = 0;
+
 	$scope.find = function(){
-		getLekovi();
+		getContacts();
 	};
 	
-	var getLekovi = function(){ 
+	$scope.back = function(){
+		$scope.page = $scope.page - 1;
+		getContacts();
+	};
+	
+	$scope.forward = function(){
+		$scope.page = $scope.page + 1;
+		getContacts();
+	};
+	
+	var getContacts = function(){ 
 		
 		var config = {params: {}};
 		
 		config.params.page = $scope.page;
 		
-		if ($scope.contactSearch.naziv != "") {
-			config.params.naziv = $scope.contactSearch.naziv;
-		}
-		if ($scope.contactSearch.minC != "") {
-			config.params.minC = $scope.contactSearch.minC;
-		}
-		if ($scope.contactSearch.maxC != "") {
-			config.params.maxC = $scope.contactSearch.maxC;
+		if ($scope.contactSearch.position != "") {
+			config.params.position = $scope.contactSearch.position;
 		}
 		
 		$http.get("/api/contacts", config)
 			.then(function success(data){
 				if (data.data != ""){
-					$scope.indikator = false;
+					$scope.indicator = false;
 				} else {
-					$scope.indikator = true;
+					$scope.indicator = true;
 				}
 				$scope.contacts = data.data;
 				$scope.num_pages = data.headers("pages");
 			}, function error(data){
 				console.log(data);
 			});
+		
+	};
+	
+});
+
+//==========================================================================================
+
+phonebookApp.controller('findContactByPhoneCtrl', function($scope, $http, $routeParams, $location){
+	
+	$scope.contactSearch = {};
+	$scope.contacts = [];
+	$scope.indicator = true;
+	
+	$scope.page = 0;
+	$scope.num_pages = 0;
+	
+	$scope.find = function(){
+		getContacts();
+	};
+	
+	$scope.back = function(){
+		$scope.page = $scope.page - 1;
+		getContacts();
+	};
+	
+	$scope.forward = function(){
+		$scope.page = $scope.page + 1;
+		getContacts();
+	};
+	
+	var getContacts = function(){ 
+		
+		var config = {params: {}};
+		
+		config.params.page = $scope.page;
+		
+		if ($scope.contactSearch.phoneMin != "") {
+			config.params.phoneMin = $scope.contactSearch.phoneMin;
+		}
+		if ($scope.contactSearch.phoneMax != "") {
+			config.params.phoneMax = $scope.contactSearch.phoneMax;
+		}
+		
+		$http.get("/api/contacts", config)
+		.then(function success(data){
+			if (data.data != ""){
+				$scope.indicator = false;
+			} else {
+				$scope.indicator = true;
+			}
+			$scope.contacts = data.data;
+			$scope.num_pages = data.headers("pages");
+		}, function error(data){
+			console.log(data);
+		});
+		
+	};
+	
+});
+//==========================================================================================
+
+phonebookApp.controller('findContactByBothCtrl', function($scope, $http, $routeParams, $location){
+	
+	$scope.contactSearch = {};
+	$scope.contacts = [];
+	$scope.indicator = true;
+	
+	$scope.page = 0;
+	$scope.num_pages = 0;
+	
+	$scope.find = function(){
+		getContacts();
+	};
+	
+	$scope.back = function(){
+		$scope.page = $scope.page - 1;
+		getContacts();
+	};
+	
+	$scope.forward = function(){
+		$scope.page = $scope.page + 1;
+		getContacts();
+	};
+	
+	var getContacts = function(){ 
+		
+		var config = {params: {}};
+		
+		config.params.page = $scope.page;
+		
+		if ($scope.contactSearch.phoneMin != "") {
+			config.params.phoneMin = $scope.contactSearch.phoneMin;
+		}
+		if ($scope.contactSearch.phoneMax != "") {
+			config.params.phoneMax = $scope.contactSearch.phoneMax;
+		}
+		
+		if ($scope.contactSearch.position != "") {
+			config.params.position = $scope.contactSearch.position;
+		}
+		
+		$http.get("/api/contacts", config)
+		.then(function success(data){
+			if (data.data != ""){
+				$scope.indicator = false;
+			} else {
+				$scope.indicator = true;
+			}
+			$scope.contacts = data.data;
+			$scope.num_pages = data.headers("pages");
+		}, function error(data){
+			console.log(data);
+		});
 		
 	};
 	
@@ -253,6 +373,17 @@ phonebookApp.config(['$routeProvider', function($routeProvider) {
 		
 		.when('/contacts/find', {
 			templateUrl : '/static/app/html/partial/find-contact.html'
+		})
+		
+		.when('/contacts/find-by-position', {
+			templateUrl : '/static/app/html/partial/find-contact-by-position.html'
+		})
+		.when('/contacts/find-by-phone', {
+			templateUrl : '/static/app/html/partial/find-contact-by-phone.html'
+		})
+		
+		.when('/contacts/find-by-both', {
+			templateUrl : '/static/app/html/partial/find-contact-by-both.html'
 		})
 		
 		.when('/contacts/view/:id', {

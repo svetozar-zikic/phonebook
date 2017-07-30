@@ -20,6 +20,12 @@ public interface ContactService {
 	
 	List<Contact> findByPositionOrPhone(Contact contact);
 	
+	Page<Contact> findByPositionLike(int page, String position);
+
+	Page<Contact> findByPhone(int page, Integer phoneMin, Integer phoneMax);
+	
+	Page<Contact> findByBoth(int page, String position, Integer phoneMin, Integer phoneMax);
+	
 	
 
 }

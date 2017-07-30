@@ -1,0 +1,38 @@
+<div ng-controller="findContactByBothCtrl">
+	<form ng-submit="find()" name="findContactForm">
+		<div class='form-group'>
+		 	<label for='position' class="col-sm-2 control-label">Position</label>
+			<input type="text" class='form-control' ng-model="contactSearch.position" id="position" placeholder='Explorations Manager' />
+		</div>
+		<div class='form-group'>
+		 	<label for='minP' class="col-sm-2 control-label">Phone # from </label>
+			<input type="text" class='form-control' ng-model="contactSearch.phoneMin" id="phoneMin" placeholder='8931' />
+		</div>
+		<div class='form-group'>
+		 	<label for='maxP' class="col-sm-2 control-label">Phone # to </label>
+			<input type="text" class='form-control' ng-model="contactSearch.phoneMax" id="phoneMax" placeholder='9000' />
+		</div>
+		<div>
+			<button type="submit" class="btn btn-primary">Find!</button>
+		</div>
+	</form>
+	<br /> <br />
+	<div ng-hide='indicator'>
+		<hr>
+		<h3>Results:</h3>
+		<div class='btn-group pull-right' >
+			<button type="button" class='btn btn-primary' ng-click='back()' ng-disabled='page == 0'>PREVIOUS</button>
+			<button type="button" class='btn btn-primary' ng-click='forward()' ng-disabled='page == num_pages-1'>NEXT</button>
+		</div>
+		<table class="table table-hover">
+			<tr>
+				<th>Phone</th>
+				<th>Position</th>
+			</tr>
+			<tr ng-repeat="contact in contacts">
+				<td>{{contact.phone}}</td>
+				<td>{{contact.position}}</td>
+			</tr>
+		</table>
+	</div>
+</div>

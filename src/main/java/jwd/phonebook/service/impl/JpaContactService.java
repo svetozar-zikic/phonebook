@@ -56,5 +56,22 @@ public class JpaContactService implements ContactService {
 		return contactRepo.findByPositionOrPhone(contact.getPosition(), contact.getPhone());
 	}
 
+	@Override
+	public Page<Contact> findByPositionLike(int page, String position) {
+		position = "%" + position + "%";
+		return contactRepo.findByPositionLike(new PageRequest(page, 10), position);
+	}
+
+	@Override
+	public Page<Contact> findByPhone(int page, Integer phoneMin, Integer phoneMax) {
+		return contactRepo.customSearch(new PageRequest(page, 5), phoneMin, phoneMax);
+	}
+
+	@Override
+	public Page<Contact> findByBoth(int page, String position, Integer phoneMin, Integer phoneMax) {
+		position = "%" + position + "%";
+		return contactRepo.customSearch2(new PageRequest(page, 5), position, phoneMin, phoneMax);
+	}
+
 
 }

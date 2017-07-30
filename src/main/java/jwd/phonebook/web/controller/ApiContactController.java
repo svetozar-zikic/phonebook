@@ -1,6 +1,5 @@
 package jwd.phonebook.web.controller;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import jwd.phonebook.model.Contact;
 import jwd.phonebook.service.ContactService;
 import jwd.phonebook.support.ContactDTOToContact;
@@ -37,10 +35,24 @@ public class ApiContactController {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<ContactDTO>> getAll(
-			@RequestParam(value = "page", defaultValue = "0") int page
+			@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "phoneMin", required = false) Integer phoneMin,
+			@RequestParam(value = "phoneMax", required = false) Integer phoneMax,
+			@RequestParam(value = "position", required = false) String position
 			){
 		
-		Page<Contact> retVal = contactSvc.findAll(page);
+		Page<Contact> retVal;
+		
+		if ((phoneMin != null || phoneMax != null) && position != null) {
+			retVal = contactSvc.findByBoth(page, position, phoneMin, phoneMax);
+		}
+		else if	(position != null) {
+			retVal = contactSvc.findByPositionLike(page, position);
+		} else if (phoneMin != null || phoneMax != null) {
+			retVal = contactSvc.findByPhone(page, phoneMin, phoneMax);
+		} else {
+			retVal = contactSvc.findAll(page);
+		}
 		
 		if (retVal == null)
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
